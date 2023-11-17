@@ -41,3 +41,5 @@ Route::delete("/Employees/{id}",[EmployeesController::class, "destroy"]);
 Route::get("/Employees/search/{name}",[EmployeesController::class, "search"]);
 
 Route::get("/Employees/active",[EmployeesController::class, "active"]);
+
+Route::get("/Employees/inActive",[EmployeesController::class, "inActive"]);

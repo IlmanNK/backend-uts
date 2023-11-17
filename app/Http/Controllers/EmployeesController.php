@@ -64,7 +64,8 @@ class EmployeesController extends Controller
             return response()->json($data, 404);
         } else {
             $data = [
-                "message" => "Get Detail Resource"
+                "message" => "Get Detail Resource",
+                "data" => $employees
             ];
             return response()->json($data, 200);
         }
@@ -117,14 +118,8 @@ class EmployeesController extends Controller
         ], 200);
     }
 
-    public function search(Request $request, $name){
-        $name = $request->input('name');
-
-        if (!$name) {
-            return response()->json(['message' => 'Name parameter is required'], 400);
-        }
-
-        $searchEmployees = Employees::where('Name', 'like', "%$name%")->get();
+    public function search($name){
+        $searchEmployees = Employees::where('Name', 'like', "%" .$name. "%")->get();
 
         if ($searchEmployees->isEmpty()){
             return response()->json(['message'=>'Resource not Found'], 404);
@@ -132,11 +127,10 @@ class EmployeesController extends Controller
 
         return response()->json([
             'message' => 'Get searchd resource',
-            'data' => $searchEmployees], 200);
-        
-    }
+            'data' => $searchEmployees], 200);  
+    }   
 
-    public function getActiveResources(Request $request) {
+    public function active(Request $request) {
         $activeResources = Employees::active()->get();
         $totalActiveResources = $activeResources->count();
 
@@ -146,5 +140,16 @@ class EmployeesController extends Controller
             'data' => $activeResources
         ], 200);
     
-}
+    }
+
+    public function inActive(Request $request) {
+        $inactiveResources = Employees::inactive()->get();
+        $totalInactiveResources = $inactiveResources->count();
+
+        return response()->json([
+            'message' => 'Get inactive resource',
+            'total' => $totalInactiveResources,
+            'data' => $inactiveResources
+        ], 200);
+    }
 }
